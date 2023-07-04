@@ -10,20 +10,15 @@ import {EthereumScript} from 'aave-helpers/ScriptUtils.sol';
 contract AaveV3ListGhoStewards is IProposalGenericExecutor {
   address public constant RISK_COUNCIL = 0x47c71dFEB55Ebaa431Ae3fbF99Ea50e0D3d30fA8;
 
-    
-    
-    AaveV3Ethereum.POOL_ADDRESSES_PROVIDER
-AaveGovernanceV2.SHORT_EXECUTOR
+  //     AaveV3Ethereum.POOL_ADDRESSES_PROVIDER
+  // AaveGovernanceV2.SHORT_EXECUTOR
 
-address public constant GHO_TOKEN = 0xabf1A66556dD506ea2573bbEa2D9D4baf3c31f09;
+  // address public constant GHO_TOKEN = 0xabf1A66556dD506ea2573bbEa2D9D4baf3c31f09;
 
-
-    // address addressesProvider,
-    // address ghoToken,
-    // address riskCouncil,
-    // address shortExecutor
-
-
+  // address addressesProvider,
+  // address ghoToken,
+  // address riskCouncil,
+  // address shortExecutor
 
   //[[0x6A44dfA9277837BC910CeDa563389cDeB5F76855]
   // [0x5d49dBcdd300aECc2C311cFB56593E71c445d60d]]
