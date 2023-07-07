@@ -99,7 +99,7 @@ contract AaveV3ListGhoStewardsPayload is IProposalGenericExecutor {
     // ------------------------------------------------
     AaveV3Ethereum.ACL_MANAGER.addPoolAdmin(address(deployedGhoSteward));
 
-    IGhoToken ghoToken = IGhoToken(GHO_TOKEN);
-    ghoToken.grantRole(ghoToken.BUCKET_MANAGER_ROLE(), address(deployedGhoSteward));
+    IGhoToken iGhoToken = IGhoToken(GHO_TOKEN);
+    iGhoToken.grantRole(iGhoToken.BUCKET_MANAGER_ROLE(), address(deployedGhoSteward));
   }
 }

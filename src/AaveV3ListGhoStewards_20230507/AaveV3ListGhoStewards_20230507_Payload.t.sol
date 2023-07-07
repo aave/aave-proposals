@@ -41,11 +41,26 @@ contract AaveV3ListGhoStewards_20230507_Payload_Test is ProtocolV3TestBase {
     bool beforeGhoStewardAdmin = AaveV3Ethereum.ACL_MANAGER.isPoolAdmin(address(GHO_STEWARD));
     assertEq(false, beforeGhoStewardAdmin);
 
+    IGhoToken iGhoToken = IGhoToken(GHO_TOKEN);
+
+    bool beforeHasBucketManagerRole = iGhoToken.hasRole(
+      iGhoToken.BUCKET_MANAGER_ROLE(),
+      address(GHO_STEWARD)
+    );
+
+    assertEq(false, beforeHasBucketManagerRole);
+
     GovHelpers.executePayload(vm, address(proposalPayload), AaveGovernanceV2.SHORT_EXECUTOR);
 
     bool afterGhoStewardAdmin = AaveV3Ethereum.ACL_MANAGER.isPoolAdmin(address(GHO_STEWARD));
-
     assertEq(true, afterGhoStewardAdmin);
+
+    bool afterHasBucketManagerRole = iGhoToken.hasRole(
+      iGhoToken.BUCKET_MANAGER_ROLE(),
+      address(GHO_STEWARD)
+    );
+
+    assertEq(true, afterHasBucketManagerRole);
   }
 
   function testUpdateBorrowRates() public {
