@@ -5,11 +5,9 @@ import {IProposalGenericExecutor} from 'aave-helpers/interfaces/IProposalGeneric
 import {AaveGovernanceV2} from 'aave-address-book/AaveGovernanceV2.sol';
 import {GhoSteward} from 'gho-core/contracts/misc/GhoSteward.sol';
 import {IGhoToken} from 'gho-core/contracts/gho/interfaces/IGhoToken.sol';
-import {EthereumScript} from 'aave-helpers/ScriptUtils.sol';
 
 library Create2Helpers {
   bytes32 public constant CREATE2_SALT = bytes32(0);
-  event GhoStewardDeployed(address addr);
 
   function deployGhoSteward(
     address poolAddressProvider,
@@ -26,7 +24,6 @@ library Create2Helpers {
     return address(_ghoStewardContract);
   }
 
-  // get the computed address before the contract DeployWithCreate2 deployed using Bytecode of contract DeployWithCreate2 and salt specified by the sender
   function getAddress(bytes memory bytecode) public pure returns (address) {
     bytes32 hash = keccak256(
       abi.encodePacked(
