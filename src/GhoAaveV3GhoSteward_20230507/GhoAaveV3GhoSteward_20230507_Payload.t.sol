@@ -2,25 +2,24 @@
 
 pragma solidity ^0.8.16;
 import 'forge-std/Test.sol';
-import {AaveV3Ethereum, AaveV3EthereumAssets} from 'aave-address-book/AaveV3Ethereum.sol';
-import {ProtocolV3TestBase, InterestStrategyValues, ReserveConfig} from 'aave-helpers/ProtocolV3TestBase.sol';
+
+import {AaveV3Ethereum} from 'aave-address-book/AaveV3Ethereum.sol';
+import {ProtocolV3TestBase} from 'aave-helpers/ProtocolV3TestBase.sol';
 import {AaveGovernanceV2} from 'aave-address-book/AaveGovernanceV2.sol';
 import {GovHelpers} from 'aave-helpers/GovHelpers.sol';
-import {GhoAaveV3GhoSteward} from './GhoAaveV3GhoSteward_20230507_Payload.sol';
+import {GhoAaveV3GhoSteward_20230507_Payload} from './GhoAaveV3GhoSteward_20230507_Payload.sol';
 import {IGhoSteward} from 'gho-core/contracts/misc/interfaces/IGhoSteward.sol';
 import {IPoolDataProvider} from 'aave-v3-core/contracts/interfaces/IPoolDataProvider.sol';
 
-import {IGhoDiscountRateStrategy} from 'gho-core/contracts/facilitators/aave/interestStrategy/interfaces/IGhoDiscountRateStrategy.sol';
 import {GhoInterestRateStrategy} from 'gho-core/contracts/facilitators/aave/interestStrategy/GhoInterestRateStrategy.sol';
 import {IGhoToken} from 'gho-core/contracts/gho/interfaces/IGhoToken.sol';
 
 contract GhoAaveV3GhoSteward_20230507_Payload_Test is ProtocolV3TestBase {
-  GhoAaveV3GhoSteward public proposalPayload;
-  address immutable ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
+  GhoAaveV3GhoSteward_20230507_Payload public proposalPayload;
 
   function setUp() public {
     vm.createSelectFork('https://rpc.tenderly.co/fork/4aa4b542-16b5-4fb7-8f75-fc1a0e2e3848');
-    proposalPayload = new GhoAaveV3GhoSteward();
+    proposalPayload = new GhoAaveV3GhoSteward_20230507_Payload();
   }
 
   function testGhoStewardRoles() public {
@@ -85,7 +84,7 @@ contract GhoAaveV3GhoSteward_20230507_Payload_Test is ProtocolV3TestBase {
   }
 
   function testUpdateBorrowRatesWhenNotRiskCouncil() public {
-    vm.startPrank(ZERO_ADDRESS);
+    vm.startPrank(address(0));
     GovHelpers.executePayload(vm, address(proposalPayload), AaveGovernanceV2.SHORT_EXECUTOR);
     IGhoSteward ghoSteward = IGhoSteward(proposalPayload.GHO_STEWARD());
     vm.expectRevert('INVALID_CALLER');
@@ -101,7 +100,7 @@ contract GhoAaveV3GhoSteward_20230507_Payload_Test is ProtocolV3TestBase {
       AaveV3Ethereum.AAVE_PROTOCOL_DATA_PROVIDER
     );
 
-    (address GHO_ATOKEN, , ) = iPoolDataProvider.getReserveTokensAddresses(
+    (address ghoAToken, , ) = iPoolDataProvider.getReserveTokensAddresses(
       proposalPayload.GHO_TOKEN()
     );
 
@@ -110,21 +109,21 @@ contract GhoAaveV3GhoSteward_20230507_Payload_Test is ProtocolV3TestBase {
     IGhoToken iGhoToken = IGhoToken(proposalPayload.GHO_TOKEN());
     IGhoSteward ghoSteward = IGhoSteward(proposalPayload.GHO_STEWARD());
 
-    (uint256 oldBucketCapacity, ) = iGhoToken.getFacilitatorBucket(GHO_ATOKEN);
+    (uint256 oldBucketCapacity, ) = iGhoToken.getFacilitatorBucket(ghoAToken);
 
     uint128 newBucketCapacity = uint128(oldBucketCapacity) + 1;
 
     vm.warp(ghoSteward.MINIMUM_DELAY() + 1);
     ghoSteward.updateBucketCapacity(newBucketCapacity);
 
-    (uint256 capacity, ) = iGhoToken.getFacilitatorBucket(GHO_ATOKEN);
+    (uint256 capacity, ) = iGhoToken.getFacilitatorBucket(ghoAToken);
 
     assertEq(capacity, newBucketCapacity);
     vm.stopPrank();
   }
 
   function testUpdateBucketCapacityWhenNotRiskCouncil() public {
-    vm.startPrank(ZERO_ADDRESS);
+    vm.startPrank(address(0));
 
     GovHelpers.executePayload(vm, address(proposalPayload), AaveGovernanceV2.SHORT_EXECUTOR);
 

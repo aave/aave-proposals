@@ -18,7 +18,7 @@ import {IGhoToken} from 'gho-core/contracts/gho/interfaces/IGhoToken.sol';
  * - Governance: https://governance.aave.com/t/arfc-gho-steward-agile-parameter-changes/13922
  * - Snapshot: https://snapshot.org/#/aave.eth/proposal/0x67fa551993a94b801018d02154f3d4f27e29bea51fe6e862686de6bf9ee650af
  */
-contract GhoAaveV3GhoSteward is IProposalGenericExecutor {
+contract GhoAaveV3GhoSteward_20230507_Payload is IProposalGenericExecutor {
   error DeployedGhoStewardNotEqualPrecomputed();
 
   address public immutable GHO_STEWARD;
